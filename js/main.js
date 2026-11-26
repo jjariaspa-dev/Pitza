@@ -56,23 +56,44 @@ const products = [
     }
 ];
 
-//Audio de bienvenida
-document.addEventListener("DOMContentLoaded", function () {
-
+// Audio de bienvenida
+document.addEventListener("DOMContentLoaded", () => {
     const audio = document.getElementById("audioBienvenida");
 
-    if (!sessionStorage.getItem("audioReproducido")) {
+    if (!audio || sessionStorage.getItem("audioReproducido")) {
+        return;
+    }
+
+    let iniciado = false;
+
+    function reproducirAudio() {
+        if (iniciado) return;
+
+        iniciado = true;
 
         audio.play()
             .then(() => {
                 sessionStorage.setItem("audioReproducido", "true");
+                quitarEventos();
             })
-            .catch(error => {
-                console.log("El navegador bloqueó la reproducción automática.");
+            .catch(() => {
+                iniciado = false;
             });
-
     }
 
+    function quitarEventos() {
+        document.removeEventListener("click", reproducirAudio);
+        document.removeEventListener("keydown", reproducirAudio);
+        document.removeEventListener("touchstart", reproducirAudio);
+    }
+
+    // Intentar reproducción automática
+    reproducirAudio();
+
+    // Si el navegador la bloquea, esperar la primera interacción
+    document.addEventListener("click", reproducirAudio);
+    document.addEventListener("keydown", reproducirAudio);
+    document.addEventListener("touchstart", reproducirAudio);
 });
 
 // Shopping Cart State
