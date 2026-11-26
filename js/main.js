@@ -56,6 +56,25 @@ const products = [
     }
 ];
 
+//Audio de bienvenida
+document.addEventListener("DOMContentLoaded", function () {
+
+    const audio = document.getElementById("audioBienvenida");
+
+    if (!sessionStorage.getItem("audioReproducido")) {
+
+        audio.play()
+            .then(() => {
+                sessionStorage.setItem("audioReproducido", "true");
+            })
+            .catch(error => {
+                console.log("El navegador bloqueó la reproducción automática.");
+            });
+
+    }
+
+});
+
 // Shopping Cart State
 let cart = [];
 
